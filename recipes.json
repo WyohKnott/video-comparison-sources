@@ -1,0 +1,41 @@
+{
+    "recipes": {
+        "av1-20180222": {
+            "quality_start": 12,
+            "quality_end": 61,
+            "quality_step": 4,
+            "encode_extension": "webm",
+            "decode_extension": "y4m",
+            "encode_cmd": "aomenc --cpu-used=2 --tile-columns=4 --passes=2 --pass=1 --bit-depth=10 --input-bit-depth=10 --end-usage=q --cq-level=$quality --fpf=$target.log -o $target $origy4m_10bits",
+            "second_pass": "aomenc --cpu-used=2 --tile-columns=4 --passes=2 --pass=2 --bit-depth=10 --input-bit-depth=10 --end-usage=q --cq-level=$quality --fpf=$target.log -o $target $origy4m_10bits",
+            "decode_cmd": "aomdec $target -o $target_dec"
+        },
+        "vp9": {
+            "quality_start": 12,
+            "quality_end": 61,
+            "quality_step": 4,
+            "encode_extension": "webm",
+            "decode_extension": "y4m",
+            "encode_cmd": "vpxenc --tile-columns=4 --row-mt=1 --passes=2 --cpu-used=2 --bit-depth=10 --input-bit-depth=10 --profile=2 --end-usage=q --cq-level=$quality -o $target $origy4m_10bits",
+            "decode_cmd": "vpxdec $target -o $target_dec"
+        },
+        "x264": {
+            "quality_start": 12,
+            "quality_end": 41,
+            "quality_step": 2,
+            "encode_extension": "mp4",
+            "decode_extension": "y4m",
+            "encode_cmd": "x264 --profile high10 --preset slower --input-depth=10 --output-depth=10 --crf $quality -o $target $origy4m_10bits",
+            "decode_cmd": "ffmpeg -y -i $target -pix_fmt yuv420p10le -strict -1 $target_dec"
+        },
+        "x265": {
+            "quality_start": 12,
+            "quality_end": 41,
+            "quality_step": 2,
+            "encode_extension": "mp4",
+            "decode_extension": "y4m",
+            "encode_cmd": "x265 --profile main10 --preset slower --input-depth=10 --output-depth=10 --crf $quality -o $target $origy4m_10bits",
+            "decode_cmd": "ffmpeg -y -i $target -pix_fmt yuv420p10le -strict -1 $target_dec"
+        }
+    }
+}
