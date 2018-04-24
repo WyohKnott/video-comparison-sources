@@ -374,6 +374,50 @@ def generate_plots(path, requested_formats):
             markdown_writer.write_table()
             file.write(markdown_writer.stream.getvalue())
             file.close()
+            
+            # av1 crf
+            results_av1 = pd.DataFrame({"x264 crf": range(16, 25)})
+            p = np.poly1d(np.polyfit(data["x264"]["quality"], data["x264"]["avg_bpp"], 4))
+            results_av1["x264 bpp"] = results_x264.apply(lambda row: p(row["x264 crf"]), axis=1)
+            p = np.poly1d(np.polyfit(data["av1-20180415"]["wavg_y_ssim_score"], data["av1-20180415"]["quality"], 4))
+            results_av1["av1 crf according to y-ssim"] = results_x264.apply(lambda row: p(row["x264 y-ssim"]), axis=1)
+            p = np.poly1d(np.polyfit(data["av1-20180415"]["quality"], data["av1-20180415"]["avg_bpp"], 4))
+            results_av1["av1 bpp according to y-ssim"] = results_av1.apply(lambda row: p(row["av1 crf according to y-ssim"]), axis=1)
+            results_av1["av1 % reduction according to y-ssim"] = results_av1.apply(lambda row: (row["av1 bpp according to y-ssim"] / row["x264 bpp"] -1) * 100, axis=1)
+            
+            p = np.poly1d(np.polyfit(data["av1-20180415"]["wavg_rgb_ssim_score"], data["av1-20180415"]["quality"], 4))
+            results_av1["av1 crf according to rgb-ssim"] = results_x264.apply(lambda row: p(row["x264 rgb-ssim"]), axis=1)
+            p = np.poly1d(np.polyfit(data["av1-20180415"]["quality"], data["av1-20180415"]["avg_bpp"], 4))
+            results_av1["av1 bpp according to rgb-ssim"] = results_av1.apply(lambda row: p(row["av1 crf according to rgb-ssim"]), axis=1)
+            results_av1["av1 % reduction according to rgb-ssim"] = results_av1.apply(lambda row: (row["av1 bpp according to rgb-ssim"] / row["x264 bpp"] -1) * 100, axis=1)
+            
+            p = np.poly1d(np.polyfit(data["av1-20180415"]["wavg_msssim_score"], data["av1-20180415"]["quality"], 4))
+            results_av1["av1 crf according to ms-ssim"] = results_x264.apply(lambda row: p(row["x264 ms-ssim"]), axis=1)
+            p = np.poly1d(np.polyfit(data["av1-20180415"]["quality"], data["av1-20180415"]["avg_bpp"], 4))
+            results_av1["av1 bpp according to ms-ssim"] = results_av1.apply(lambda row: p(row["av1 crf according to ms-ssim"]), axis=1)
+            results_av1["av1 % reduction according to ms-ssim"] = results_av1.apply(lambda row: (row["av1 bpp according to ms-ssim"] / row["x264 bpp"] -1) * 100, axis=1)
+            
+            p = np.poly1d(np.polyfit(data["av1-20180415"]["wavg_psnrhvsm_score"], data["av1-20180415"]["quality"], 4))
+            results_av1["av1 crf according to psnr-hvs-m"] = results_x264.apply(lambda row: p(row["x264 psnr-hvs-m"]), axis=1)
+            p = np.poly1d(np.polyfit(data["av1-20180415"]["quality"], data["av1-20180415"]["avg_bpp"], 4))
+            results_av1["av1 bpp according to psnr-hvs-m"] = results_av1.apply(lambda row: p(row["av1 crf according to psnr-hvs-m"]), axis=1)
+            results_av1["av1 % reduction according to psnr-hvs-m"] = results_av1.apply(lambda row: (row["av1 bpp according to psnr-hvs-m"] / row["x264 bpp"] -1) * 100, axis=1)
+            
+            p = np.poly1d(np.polyfit(data["av1-20180415"]["wavg_vmaf_score"], data["av1-20180415"]["quality"], 4))
+            results_av1["av1 crf according to vmaf"] = results_x264.apply(lambda row: p(row["x264 vmaf"]), axis=1)
+            p = np.poly1d(np.polyfit(data["av1-20180415"]["quality"], data["av1-20180415"]["avg_bpp"], 4))
+            results_av1["av1 bpp according to vmaf"] = results_av1.apply(lambda row: p(row["av1 crf according to vmaf"]), axis=1)
+            results_av1["av1 % reduction according to vmaf"] = results_av1.apply(lambda row: (row["av1 bpp according to vmaf"] / row["x264 bpp"] -1) * 100, axis=1)
+
+            results_file = path + "/" + os.path.basename(path) + ".crf_conversion.av1.1080.lossy.out"
+            results_av1.to_csv(results_file, sep=":")
+            file = open(path + "/" + os.path.basename(path) + ".crf_conversion.av1.1080.lossy.md", "w")
+            markdown_writer = pytablewriter.MarkdownTableWriter()
+            markdown_writer.from_dataframe(results_av1)
+            markdown_writer.stream = six.StringIO()
+            markdown_writer.write_table()
+            file.write(markdown_writer.stream.getvalue())
+            file.close()
 
 
 def main(argv):
