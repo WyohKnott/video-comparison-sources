@@ -1,13 +1,22 @@
 {
     "recipes": {
-        "av1-20180222": {
+        "av1-20180415": {
             "quality_start": 12,
             "quality_end": 61,
             "quality_step": 4,
             "encode_extension": "webm",
             "decode_extension": "y4m",
-            "encode_cmd": "aomenc --cpu-used=2 --tile-columns=4 --passes=2 --pass=1 --bit-depth=10 --input-bit-depth=10 --end-usage=q --cq-level=$quality --fpf=$target.log -o $target $origy4m_10bits",
-            "second_pass": "aomenc --cpu-used=2 --tile-columns=4 --passes=2 --pass=2 --bit-depth=10 --input-bit-depth=10 --end-usage=q --cq-level=$quality --fpf=$target.log -o $target $origy4m_10bits",
+            "encode_cmd": "aomenc --cpu-used=4 --tile-columns=4 --passes=2 --pass=1 --bit-depth=10 --input-bit-depth=10 --end-usage=q --cq-level=$quality --fpf=$target.log -o $target $origy4m_10bits",
+            "second_pass": "aomenc --cpu-used=4 --tile-columns=4 --passes=2 --pass=2 --bit-depth=10 --input-bit-depth=10 --end-usage=q --cq-level=$quality --fpf=$target.log -o $target $origy4m_10bits",
+            "decode_cmd": "aomdec $target -o $target_dec"
+        },
+        "rav1e-20181008": {
+            "quality_start": 40,
+            "quality_end": 193,
+            "quality_step": 8,
+            "encode_extension": "ivf",
+            "decode_extension": "y4m",
+            "encode_cmd": "rav1e --tune Psychovisual --quantizer $quality --speed 4 $origy4m_10bits --output $target",
             "decode_cmd": "aomdec $target -o $target_dec"
         },
         "vp9": {

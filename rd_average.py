@@ -81,9 +81,9 @@ def get_lossy_average(args):
 
             for data in rawdata:
                 if resolution == "any":
-                    merged_data[i] = merged_data[i].append(data.iloc[[i]])
+                    merged_data[i] = merged_data[i].append(data.iloc[[i]], sort=True)
                 else:
-                    merged_data[i] = merged_data[i].append(data[(data.index == i) & (data["height"] == resolution)])
+                    merged_data[i] = merged_data[i].append(data[(data.index == i) & (data["height"] == resolution)], sort=True)
 
             merged_data[i].sort_values("file_name", ascending=True, inplace=True)
 
