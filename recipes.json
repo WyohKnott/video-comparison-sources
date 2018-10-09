@@ -1,6 +1,6 @@
 {
     "recipes": {
-        "av1-20180415": {
+        "libaom-20180415": {
             "quality_start": 12,
             "quality_end": 61,
             "quality_step": 4,
@@ -19,7 +19,7 @@
             "encode_cmd": "rav1e --tune Psychovisual --quantizer $quality --speed 4 $origy4m_10bits --output $target",
             "decode_cmd": "aomdec $target -o $target_dec"
         },
-        "vp9": {
+        "libvpx": {
             "quality_start": 12,
             "quality_end": 61,
             "quality_step": 4,

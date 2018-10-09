@@ -322,9 +322,9 @@ def generate_plots(path, requested_formats):
                 results[format][format + " bpp according to vmaf"] = results[format].apply(lambda row: p(row[format + " crf according to vmaf"]), axis=1)
                 results[format][format + " % reduction according to vmaf"] = results[format].apply(lambda row: (row[format + " bpp according to vmaf"] / row["x264 bpp"] -1) * 100, axis=1)
 
-                results_file = path + "/" + os.path.basename(path) + ".crf_conversion." + format + ".1080.lossy.out"
+                results_file = path + "/" + os.path.basename(path) + "." + format + ".crf_conversion.1080.lossy.out"
                 results[format].to_csv(results_file, sep=":")
-                file = open(path + "/" + os.path.basename(path) + ".crf_conversion." + format + ".1080.lossy.md", "w")
+                file = open(path + "/" + os.path.basename(path) + "." + format + ".crf_conversion.1080.lossy.md", "w")
                 markdown_writer = pytablewriter.MarkdownTableWriter()
                 markdown_writer.from_dataframe(results[format])
                 markdown_writer.stream = six.StringIO()
@@ -357,6 +357,7 @@ def main(argv):
 
     available_formats = []
     for f in glob.glob(results_folder + "/*.lossy.out"):
+        print(os.path.basename(f))
         available_formats.append(os.path.basename(f).split(".")[1])
 
     try:
